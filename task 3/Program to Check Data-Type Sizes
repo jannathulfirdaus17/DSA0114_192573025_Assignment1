@@ -1,0 +1,19 @@
+#include <iostream>
+using namespace std;
+int main() {
+    cout << "Size of bool: " << sizeof(bool) << " bytes\n";
+    cout << "Size of char: " << sizeof(char) << " bytes\n";
+    cout << "Size of int: " << sizeof(int) << " bytes\n";
+    cout << "Size of unsigned int: "
+         << sizeof(unsigned int) << " bytes\n";
+    cout << "Size of long long: "
+         << sizeof(long long) << " bytes\n";
+    cout << "Size of float: " << sizeof(float) << " bytes\n";
+    cout << "Size of double: " << sizeof(double) << " bytes\n";
+
+    auto fare = 2000LL;
+    cout << "Size of auto variable: "
+         << sizeof(fare) << " bytes\n";
+
+    return 0;
+}
