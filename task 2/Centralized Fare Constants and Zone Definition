@@ -1,0 +1,35 @@
+#include <iostream>
+using namespace std;
+// Fixed fare-related constants
+constexpr double INNER_FARE = 10.0;
+constexpr double MIDDLE_FARE = 20.0;
+constexpr double OUTER_FARE = 30.0;
+constexpr double PEAK_SURCHARGE_PERCENT = 20.0;
+constexpr double MINIMUM_BALANCE = 50.0;
+// Metro zone enumeration
+enum class Zone {
+    INNER,
+    MIDDLE,
+    OUTER
+};
+int main() {
+    double balance = 200.0;
+    double fare = INNER_FARE;
+    // Apply 20% peak surcharge
+    bool peakHour = true;
+    if (peakHour) {
+        fare += fare * PEAK_SURCHARGE_PERCENT / 100.0;
+    }
+
+    if (balance - fare >= MINIMUM_BALANCE) {
+        balance -= fare;
+        cout << "Journey accepted" << endl;
+        cout << "Fare: Rs. " << fare << endl;
+        cout << "Remaining balance: Rs. "
+             << balance << endl;
+    }
+    else {
+        cout << "Insufficient balance" << endl;
+    }
+    return 0;
+}
