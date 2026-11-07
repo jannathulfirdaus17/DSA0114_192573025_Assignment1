@@ -1,0 +1,112 @@
+#include <iostream>
+#include <array>
+#include <iomanip>
+using namespace std;
+enum class Zone {
+    Inner = 1,
+    Middle,
+    Outer,
+    Airport
+};
+constexpr long long MIN_BALANCE = 5000;
+constexpr int PEAK_RATE = 20;
+constexpr int WEEKEND_DISCOUNT = 10;
+const array<long long, 4> FARES = {
+    1000, 2000, 3000, 6000
+};
+// Monthly pass for two selected zones
+class MonthlyPass {
+private:
+    Zone zone1, zone2;
+    bool active;
+public:
+    MonthlyPass(Zone z1, Zone z2)
+        : zone1(z1), zone2(z2), active(true) {}
+    bool covers(Zone z) const {
+        return active && (z == zone1 || z == zone2);
+    }
+    void deactivate() {
+        active = false;
+    }
+};
+// Fare calculation
+long long calculateFare(Zone zone, int hour, bool weekend) {
+    int index = static_cast<int>(zone) - 1;
+    if (index < 0 || index >= 4 ||
+        hour < 0 || hour > 23) {
+        return -1;
+    }
+    long long fare = FARES[index];
+    // Weekend discount replaces peak surcharge
+    if (weekend) {
+        fare -= fare * WEEKEND_DISCOUNT / 100;
+    }
+    else if ((hour >= 8 && hour < 10) ||
+             (hour >= 17 && hour < 20)) {
+        fare += fare * PEAK_RATE / 100;
+    }
+    return fare;
+}
+
+class SmartCard {
+private:
+    long long balance;
+public:
+    SmartCard(long long amount) : balance(amount) {}
+    bool travel(
+        Zone zone, int hour, bool weekend,
+        const MonthlyPass* pass = nullptr
+    ) {
+        if (pass != nullptr && pass->covers(zone)) {
+            cout << "Monthly pass used. Fare: Rs 0.00\n";
+            return true;
+        }
+        long long fare = calculateFare(zone, hour, weekend);
+        if (fare < 0) {
+            cout << "Invalid journey\n";
+            return false;
+        }
+
+        if (balance - fare < MIN_BALANCE) {
+            cout << "Insufficient balance\n";
+            return false;
+        }
+        balance -= fare;
+        cout << "Fare: Rs " << fare / 100.0
+             << ", Balance: Rs " << balance / 100.0
+             << '\n';
+
+        return true;
+    }
+    long long getBalance() const {
+        return balance;
+    }
+};
+int main() {
+    cout << fixed << setprecision(2);
+    SmartCard card(20000);
+    MonthlyPass pass(Zone::Inner, Zone::Airport);
+    cout << "Weekday Airport peak:\n";
+    card.travel(Zone::Airport, 18, false);
+    cout << "\nWeekend Airport journey:\n";
+    card.travel(Zone::Airport, 18, true);
+    cout << "\nWeekend Middle journey:\n";
+    card.travel(Zone::Middle, 12, true);
+    cout << "\nInner Zone with monthly pass:\n";
+    card.travel(Zone::Inner, 12, false, &pass);
+    cout << "\nFinal balance: Rs "
+         << card.getBalance() / 100.0 << '\n';
+    // Additional validation tests
+    cout << "\n----- Additional Tests -----\n";
+    long long offPeakFare =
+        calculateFare(Zone::Airport, 12, false);
+    cout << "Airport weekday off-peak test: Rs "
+         << offPeakFare / 100.0 << '\n';
+    long long invalidFare =
+        calculateFare(static_cast<Zone>(5), 12, false);
+
+    cout << "Invalid zone test: "
+         << (invalidFare == -1 ? "Rejected" : "Accepted")
+         << '\n';
+    return 0;
+}
