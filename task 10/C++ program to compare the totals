@@ -1,0 +1,27 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+int main()
+{
+    const int FARE_PAISE = 1000;
+    const double FARE_RUPEES = 10.00;
+    int journeys[] = {20000, 500000, 3000000};
+    for (int n : journeys) {
+        long long integerTotal = 0;
+        double doubleTotal = 0.0;
+        for (int i = 0; i < n; i++) {
+            integerTotal += FARE_PAISE;
+            doubleTotal += FARE_RUPEES;
+        }
+        cout << "\nJourneys: " << n << '\n';
+        cout << "Integer-paise total: Rs "
+             << fixed << setprecision(2)
+             << integerTotal / 100.0 << '\n';
+
+        cout << "Double total: Rs "
+             << doubleTotal << '\n';
+        cout << "Difference: Rs "
+             << doubleTotal - integerTotal / 100.0 << '\n';
+    }
+    return 0;
+}
