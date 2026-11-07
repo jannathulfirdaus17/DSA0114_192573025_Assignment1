@@ -1,0 +1,19 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+int main() {
+    double totalRupees = 0.0;
+    long long totalPaise = 0;
+    for (int i = 0; i < 10; i++) {
+        totalRupees += 0.1;
+        totalPaise += 10;
+    }
+    cout << setprecision(17);
+    cout << "Double total: "
+         << totalRupees << " rupees" << endl;
+    cout << "Integer total: "
+         << totalPaise << " paise" << endl;
+    cout << "Integer total in rupees: "
+         << totalPaise / 100.0 << endl;
+    return 0;
+}
